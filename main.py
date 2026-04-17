@@ -1,5 +1,6 @@
-from tkinter import *
 import tkinter as tk
+from tkinter import font
+from tkinter import filedialog
 
 root = tk.Tk()
 root.title("NoTToday")
@@ -10,7 +11,7 @@ file_path = None
 dark_mode = False
 
 current_font_family = "Arial"
-current_font_size = 12
+current_font_size = 14
 
 text_area = tk.Text(root, wrap="word", undo=True)
 text_area.pack(expand=True, fill="both")
@@ -29,7 +30,7 @@ def new_file():
 def open_file():
     global file_path
     file_path = filedialog.askopenfilename(
-        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+        filetypes=[("Text Files", "*.txt"),("C File", ".c"),("C++ File",".cpp"),("Python File", ".py"),("All Files", "*.*")]
     )
     if file_path:
         with open(file_path, "r", encoding="utf-8") as file:
@@ -49,7 +50,7 @@ def save_as_file():
     global file_path
     file_path = filedialog.asksaveasfilename(
         defaultextension=".txt",
-        filetypes=[("Text Files", "*.txt"), ("All Files", "*.*")]
+        filetypes=[("Text Files", "*.txt"),("C File", ".c"),("C++ File",".cpp"),("Python File", ".py"),("All Files", "*.*")]
     )
     if file_path:
         save_file()
@@ -183,9 +184,7 @@ menu_bar.add_cascade(label="Format", menu=font_menu)
 
 root.config(menu=menu_bar)
 
-
 apply_theme()
 update_font()
-
 
 root.mainloop()
