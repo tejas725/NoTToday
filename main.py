@@ -126,7 +126,7 @@ def find_replace():
                 text_area.tag_add("highlight", start, end)
                 start = end
 
-            # 🔥 premium highlight
+            
             text_area.tag_config("highlight", background="orange", foreground="black")
 
     def replace_text():
