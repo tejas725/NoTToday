@@ -11,6 +11,8 @@ root.geometry("900x650")
 file_path = None
 dark_mode = False
 
+show_line_numbers = tk.BooleanVar(value=True)
+
 current_font_family = "Arial"
 current_font_size = 14
 
@@ -78,7 +80,12 @@ def toggle_theme():
 
     apply_theme()
 
-
+def toggle_line_numbers():
+    if show_line_numbers.get():
+        line_numbers.pack(side="left", fill="y", before=text_area)
+    else:
+        line_numbers.pack_forget()
+        
 def update_status(event=None):
     content = text_area.get("1.0", tk.END)
     words = len(content.split())
@@ -199,7 +206,7 @@ line_numbers = tk.Text(frame, width=4, padx=4, takefocus=0, border=0,background=
 line_numbers.pack(side="left", fill="y")
 
 text_area = tk.Text(frame, wrap="word", undo=True, yscrollcommand=on_scroll)
-text_area.pack(side="right", expand=True, fill="both")
+text_area.pack(side="left", expand=True, fill="both")
 
 
 status_bar = tk.Label(root, text="Words: 0 | Characters: 0", anchor="e")
@@ -239,6 +246,11 @@ menu_bar.add_cascade(label="Edit", menu=edit_menu)
 
 view_menu = tk.Menu(menu_bar, tearoff=0)
 view_menu.add_command(label="Dark Mode", command=toggle_theme)
+view_menu.add_checkbutton(
+    label="Line Numbers",
+    variable=show_line_numbers,
+    command=toggle_line_numbers
+)
 menu_bar.add_cascade(label="View", menu=view_menu)
 
 
