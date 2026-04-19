@@ -86,7 +86,9 @@ def update_status(event=None):
     status_bar.config(text=f"Words: {words} | Characters: {chars}")
 
 text_area.bind("<KeyRelease>", update_status)
-
+root.bind("<Control-s>", lambda event: save_file())
+root.bind("<Control-o>", lambda event: open_file())
+root.bind("<Control-f>", lambda event: find_replace())
 
 
 def change_font_family(family):
