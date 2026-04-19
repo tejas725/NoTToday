@@ -90,12 +90,6 @@ def update_status(event=None):
         text=f"Ln {row}, Col {int(col)+1} | Words: {words} | Characters: {chars}"
     )
 
-text_area.bind("<KeyRelease>", update_status)
-text_area.bind("<ButtonRelease>", update_status)
-root.bind("<Control-s>", lambda event: save_file())
-root.bind("<Control-o>", lambda event: open_file())
-root.bind("<Control-f>", lambda event: find_replace())
-
 
 def change_font_family(family):
     global current_font_family
@@ -125,7 +119,19 @@ def toggle_bold(event=None):
 
     except:
         pass
-root.bind("<Control-b>", toggle_bold)
+text_area.bind("<Control-b>", toggle_bold)
+
+def undo_action(event=None):
+    try:
+        text_area.edit_undo()
+    except:
+        pass
+
+def redo_action(event=None):
+    try:
+        text_area.edit_redo()
+    except:
+        pass
 
 def find_replace():
     find_window = tk.Toplevel(root)
@@ -168,7 +174,13 @@ def find_replace():
     tk.Button(find_window, text="Find", command=find_text).pack(pady=4)
     tk.Button(find_window, text="Replace All", command=replace_text).pack(pady=4)
 
-
+text_area.bind("<KeyRelease>", update_status)
+text_area.bind("<ButtonRelease>", update_status)
+root.bind("<Control-s>", lambda event: save_file())
+root.bind("<Control-o>", lambda event: open_file())
+root.bind("<Control-f>", lambda event: find_replace())
+text_area.bind("<Control-z>", undo_action)
+text_area.bind("<Control-y>", redo_action)
 
 menu_bar = tk.Menu(root)
 
@@ -184,6 +196,9 @@ menu_bar.add_cascade(label="File", menu=file_menu)
 
 
 edit_menu = tk.Menu(menu_bar, tearoff=0)
+edit_menu.add_command(label="Undo    Ctrl+Z", command=undo_action)
+edit_menu.add_command(label="Redo    Ctrl+Y", command=redo_action)
+edit_menu.add_separator()
 edit_menu.add_command(label="Find & Replace", command=find_replace)
 menu_bar.add_cascade(label="Edit", menu=edit_menu)
 
