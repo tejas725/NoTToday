@@ -70,8 +70,13 @@ def apply_theme():
 def toggle_theme():
     global dark_mode
     dark_mode = not dark_mode
-    apply_theme()
 
+    if dark_mode:
+        view_menu.entryconfig(0, label="Light Mode")
+    else:
+        view_menu.entryconfig(0, label="Dark Mode")
+
+    apply_theme()
 
 
 def update_status(event=None):
@@ -162,7 +167,7 @@ menu_bar.add_cascade(label="Edit", menu=edit_menu)
 
 
 view_menu = tk.Menu(menu_bar, tearoff=0)
-view_menu.add_command(label="Dark Theme", command=toggle_theme)
+view_menu.add_command(label="Dark Mode", command=toggle_theme)
 menu_bar.add_cascade(label="View", menu=view_menu)
 
 
