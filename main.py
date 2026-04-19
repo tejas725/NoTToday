@@ -17,15 +17,7 @@ current_font_size = 14
 frame = tk.Frame(root)
 frame.pack(expand=True, fill="both")
 
-line_numbers = tk.Text(frame, width=4, padx=4, takefocus=0, border=0, background="#f0f0f0", state="disabled")
-line_numbers.pack(side="left", fill="y")
 
-text_area = tk.Text(frame, wrap="word", undo=True)
-text_area.pack(side="right", expand=True, fill="both")
-
-
-status_bar = tk.Label(root, text="Words: 0 | Characters: 0", anchor="e")
-status_bar.pack(fill="x", side="bottom")
 
 
 def new_file():
@@ -63,7 +55,9 @@ def save_as_file():
         save_file()
         root.title(f"{file_path} - NoTToday")
 
-
+def on_scroll(*args):
+    text_area.yview(*args)
+    line_numbers.yview(*args)
 
 def apply_theme():
     if dark_mode:
@@ -136,7 +130,6 @@ def toggle_bold(event=None):
 
     except:
         pass
-text_area.bind("<Control-b>", toggle_bold)
 
 def undo_action(event=None):
     try:
@@ -149,6 +142,11 @@ def redo_action(event=None):
         text_area.edit_redo()
     except:
         pass
+
+def sync_scroll(event):
+    text_area.yview_scroll(int(-1*(event.delta/120)), "units")
+    line_numbers.yview_scroll(int(-1*(event.delta/120)), "units")
+    return "break"
 
 def find_replace():
     find_window = tk.Toplevel(root)
@@ -194,6 +192,18 @@ def find_replace():
 def on_key_release(event=None):
     update_status()
     update_line_numbers()
+    line_numbers.yview_moveto(text_area.yview()[0])
+
+
+line_numbers = tk.Text(frame, width=4, padx=4, takefocus=0, border=0,background="#e0e0e0", fg="#555", state="disabled")
+line_numbers.pack(side="left", fill="y")
+
+text_area = tk.Text(frame, wrap="word", undo=True, yscrollcommand=on_scroll)
+text_area.pack(side="right", expand=True, fill="both")
+
+
+status_bar = tk.Label(root, text="Words: 0 | Characters: 0", anchor="e")
+status_bar.pack(fill="x", side="bottom")
 
 text_area.bind("<KeyRelease>", on_key_release)
 text_area.bind("<ButtonRelease>", on_key_release)
@@ -202,6 +212,9 @@ root.bind("<Control-o>", lambda event: open_file())
 root.bind("<Control-f>", lambda event: find_replace())
 text_area.bind("<Control-z>", undo_action)
 text_area.bind("<Control-y>", redo_action)
+text_area.bind("<MouseWheel>", sync_scroll)
+line_numbers.bind("<MouseWheel>", sync_scroll)
+text_area.bind("<Control-b>", toggle_bold)
 
 menu_bar = tk.Menu(root)
 
