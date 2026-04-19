@@ -103,7 +103,21 @@ def update_font():
     new_font = font.Font(family=current_font_family, size=current_font_size)
     text_area.config(font=new_font)
 
+def toggle_bold(event=None):
+    try:
+        current_tags = text_area.tag_names("sel.first")
 
+        if "bold" in current_tags:
+            text_area.tag_remove("bold", "sel.first", "sel.last")
+        else:
+            bold_font = font.Font(text_area, text_area.cget("font"))
+            bold_font.configure(weight="bold")
+            text_area.tag_configure("bold", font=bold_font)
+            text_area.tag_add("bold", "sel.first", "sel.last")
+
+    except:
+        pass
+root.bind("<Control-b>", toggle_bold)
 
 def find_replace():
     find_window = tk.Toplevel(root)
