@@ -205,7 +205,11 @@ def on_key_release(event=None):
 line_numbers = tk.Text(frame, width=4, padx=4, takefocus=0, border=0,background="#e0e0e0", fg="#555", state="disabled")
 line_numbers.pack(side="left", fill="y")
 
-text_area = tk.Text(frame, wrap="word", undo=True, yscrollcommand=on_scroll)
+scrollbar = tk.Scrollbar(frame)
+scrollbar.pack(side="right", fill="y")
+scrollbar.config(command=on_scroll)
+
+text_area = tk.Text(frame, wrap="word", undo=True, yscrollcommand=scrollbar.set)
 text_area.pack(side="left", expand=True, fill="both")
 
 
