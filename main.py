@@ -83,9 +83,15 @@ def update_status(event=None):
     content = text_area.get("1.0", tk.END)
     words = len(content.split())
     chars = len(content) - 1
-    status_bar.config(text=f"Words: {words} | Characters: {chars}")
+
+    row, col = text_area.index("insert").split(".")
+
+    status_bar.config(
+        text=f"Ln {row}, Col {int(col)+1} | Words: {words} | Characters: {chars}"
+    )
 
 text_area.bind("<KeyRelease>", update_status)
+text_area.bind("<ButtonRelease>", update_status)
 root.bind("<Control-s>", lambda event: save_file())
 root.bind("<Control-o>", lambda event: open_file())
 root.bind("<Control-f>", lambda event: find_replace())
