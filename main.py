@@ -14,8 +14,14 @@ dark_mode = False
 current_font_family = "Arial"
 current_font_size = 14
 
-text_area = tk.Text(root, wrap="word", undo=True)
-text_area.pack(expand=True, fill="both")
+frame = tk.Frame(root)
+frame.pack(expand=True, fill="both")
+
+line_numbers = tk.Text(frame, width=4, padx=4, takefocus=0, border=0, background="#f0f0f0", state="disabled")
+line_numbers.pack(side="left", fill="y")
+
+text_area = tk.Text(frame, wrap="word", undo=True)
+text_area.pack(side="right", expand=True, fill="both")
 
 
 status_bar = tk.Label(root, text="Words: 0 | Characters: 0", anchor="e")
@@ -90,7 +96,17 @@ def update_status(event=None):
         text=f"Ln {row}, Col {int(col)+1} | Words: {words} | Characters: {chars}"
     )
 
+def update_line_numbers(event=None):
+    line_numbers.config(state="normal")
+    line_numbers.delete("1.0", tk.END)
 
+    total_lines = text_area.index("end-1c").split(".")[0]
+
+    numbers = "\n".join(str(i) for i in range(1, int(total_lines) + 1))
+
+    line_numbers.insert("1.0", numbers)
+    line_numbers.config(state="disabled")
+    
 def change_font_family(family):
     global current_font_family
     current_font_family = family
@@ -104,6 +120,7 @@ def change_font_size(size):
 def update_font():
     new_font = font.Font(family=current_font_family, size=current_font_size)
     text_area.config(font=new_font)
+    line_numbers.config(font=new_font)   
 
 def toggle_bold(event=None):
     try:
@@ -174,8 +191,12 @@ def find_replace():
     tk.Button(find_window, text="Find", command=find_text).pack(pady=4)
     tk.Button(find_window, text="Replace All", command=replace_text).pack(pady=4)
 
-text_area.bind("<KeyRelease>", update_status)
-text_area.bind("<ButtonRelease>", update_status)
+def on_key_release(event=None):
+    update_status()
+    update_line_numbers()
+
+text_area.bind("<KeyRelease>", on_key_release)
+text_area.bind("<ButtonRelease>", on_key_release)
 root.bind("<Control-s>", lambda event: save_file())
 root.bind("<Control-o>", lambda event: open_file())
 root.bind("<Control-f>", lambda event: find_replace())
@@ -229,5 +250,5 @@ root.config(menu=menu_bar)
 
 apply_theme()
 update_font()
-
+update_line_numbers()
 root.mainloop()
