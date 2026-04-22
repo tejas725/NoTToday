@@ -1,4 +1,3 @@
-#updated by Amaan - testing git workflow
 import tkinter as tk
 from tkinter import font
 from tkinter import filedialog
